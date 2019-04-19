@@ -6,11 +6,11 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
-***UCI Net ID***: ucinetid1
+## Kenneth Yam
+***UCI Net ID***: kcyam
 
-## USER 2
-***UCI Net ID***: ucinetid2
+## Alec Jackson
+***UCI Net ID***: alecej
 
-## USER 3
-***UCI Net ID***: ucinetid3
+## Rodrigo Erquiaga
+***UCI Net ID***: rerquiag
