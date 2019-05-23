@@ -24,7 +24,6 @@ F4 = 349.228Hz      F5 = 698.455Hz
 import csv
 
 def create_note_list(file_name,tempo,threshold=10000,offset = 0.00):
-    #At it's current state, it will only choose the most prominent note
     #Later, this will be tuples of frequencies with their amplitudes (loudness).
     #For now, tempo is actual BPM/4 since we'll deal with quarter notes (for now)
     #the offset is for just in case the song doesn't start at 0 sec
@@ -47,10 +46,11 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00):
         elif(line == 1): #the list of all timestamps (using AnthemScore, it's .01s intervals)
             for interval in time:
                 interval_list.append(float(interval))
-            beats = 1/(tempo/60.0)
+            beats = round(1/(tempo/60.0),2)
             
             #we may need above to calculate tempo
-            #print(interval_list)   
+            #print(interval_list)
+            
         elif(line > 2):
             #print(interval_list[line-2]+offset)
             #will change below later so tempos that don't divide evenly can also work
@@ -99,9 +99,10 @@ def number_converter(list_of_freq):
                 inside_list.append((note_convert[freq[0]],freq[1]))
         new_list.append(inside_list)
         inside_list = []
-        
+
     return new_list
 
 #Test
-freq_list = create_note_list("440Hz.csv",120)
+#freq_list = create_note_list("440Hz.csv",120)
+freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,5000,-.07)
 print(number_converter(freq_list))
