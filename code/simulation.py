@@ -8,6 +8,8 @@ import MalmoPython
 import malmoutils
 import sys
 import json
+import constraint_solver as cs
+import music_translator as mt
 from musician import *
 
 #Data structure to store the positions of each block.
@@ -204,6 +206,9 @@ def waitForStart(agent_hosts):
     print("Mission has started.")
 
 def main():
+    '''
+    MALMO
+    '''
     print('Starting...', flush=True)
 
     agent_host = MalmoPython.AgentHost()
@@ -228,21 +233,23 @@ def main():
     waitForStart([agent_host, agent_host2])
 
     time.sleep(1)
+    
 
-    #Simulation starts here.
+    '''
+    SIMULATION BEGINS HERE
+    '''
+    freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08)
+    freq_list = mt.number_converter(freq_list)
+    solutions = cs.get_solutions(freq_list, 2)
+
     agent_names = ["Agent1", "Agent2"]
-    i = 0
-    j = 24
 
-    #go through each note and hit it, Agent1 starts from left, Agent2 starts from right.
-    while i < 25:
+    for i in range(len(solutions[0])):
 
-        #Call teleport on both agents and use time.sleep(1) to ensure everything is okay
-        musician.teleport_to_noteblock(agent_host, i, agent_names[0])
-        musician2.teleport_to_noteblock(agent_host, j, agent_names[1])
+        musician.teleport_to_noteblock(agent_host, solutions[0][i], agent_names[0])
+        musician2.teleport_to_noteblock(agent_host, solutions[1][i], agent_names[1])
         time.sleep(0.1)
 
-        #If the musician/agent received a note to play then hit it.
         if musician.can_play:
             agent_host.sendCommand("attack 1")
             
@@ -256,9 +263,7 @@ def main():
             agent_host2.sendCommand("attack 0")
             musician2.can_play = False
 
-        time.sleep(1)
-        i+=1
-        j-=1
+        time.sleep(0.3)
     
 if __name__ == '__main__':
 	main()	

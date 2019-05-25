@@ -24,6 +24,10 @@ class Musician():
 
 	#Plays the noteblock specified by note_id.
 	def teleport_to_noteblock(self, agent_host, note_id, name):
+
+		if note_id == -1:
+			return None
+			
 		#Obtain x,z coordinates of noteblock location based on note_id.
 		note_location_x, note_location_z = self.get_note_locations(agent_host, note_id)
 

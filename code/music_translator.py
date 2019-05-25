@@ -136,9 +136,9 @@ def number_converter(list_of_freq):
 
 #Test
 #freq_list = create_note_list("440Hz.csv",120)
-freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,7000,-.08)
+freq_list = create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08)
 #print(len(freq_list))
-print(number_converter(freq_list))
+#print(number_converter(freq_list))
 
 #TODO
 '''
