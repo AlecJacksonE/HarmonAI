@@ -3,7 +3,7 @@ layout: default
 title:  Home
 ---
 
-Source code: https://github.com/AlecJacksonE/HarmonAI/code (_fix this_)
+Source code: https://github.com/AlecJacksonE/HarmonAI/code
 
 Reports:
 
