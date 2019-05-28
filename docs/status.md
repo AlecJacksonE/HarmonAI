@@ -1,5 +1,9 @@
 # Status
 
+## Youtube Video
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xW8mXuhalDM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Project Summary:
 For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time in an optimal manner. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp.
 
