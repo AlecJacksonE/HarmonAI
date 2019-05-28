@@ -24,7 +24,7 @@ Right now, the AI only knows the BPM of the song, so it checks every quarter not
 
 
 ## Resources Used: 
-We used AnthemScore, a neural network, to transcribe audio files such as .wav and .mp3.
+We used AnthemScore, a neural network, to transcribe audio files such as .wav and .mp3. Utilized functions from two_diggers.py to aid in generating multiple agents.
 
 
 
