@@ -26,10 +26,10 @@ import csv
 
 def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .03):
     #Later, this will be tuples of frequencies with their amplitudes (loudness).
-    #For now, tempo is actual BPM/4 since we'll deal with quarter notes (for now)
+    #For now, tempo is actual BPM/8 since we'll deal with eighth notes (for now)
     #the offset is for just in case the song doesn't start at 0 sec
     #songs aren't always perfectly timed, so we use leniency to check the frequencies
-    #around the beat (in frames rather than time)
+    #around the beat (in time)
     note_list = []
     interval_list = []
     frequency_list = [] #the list of frequencies checked
@@ -38,72 +38,89 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
 
     reader = csv.reader(csv_file)
     max_list = []
+    min_list = []
     within_bounds = False
     descent = False #we don't want to accidentally grab all frequencies on descending
-    below_thresh = above_thresh = False # to help with finding 8th notes
-
-    
-    '''
-    leniency_list = [0]
-    for num in range(leniency):
-        leniency_list.append(leniency+1)
-        leniency_list.append(-leniency-1)
-    '''
+    add_frequency = True # to help with finding 8th notes
     
     for line, time in enumerate(reader):
         prev_amplitude = 0
         if(line == 0): #the list of all frequencies checked (also includes non-notes)
             for freq in time:
                 frequency_list.append(float(freq))
-
+        
         elif(line == 1): #the list of all timestamps (using AnthemScore, it's .01s intervals)
             for interval in time:
                 interval_list.append(float(interval))
             beats = round(1/(tempo/30.0),2) #changed 60 to 30 to take account of eight notes
-            
-            #print(interval_list)
+
+            #put over here rather than the next elif to not erase
+            max_list = [0]*len(frequency_list)
+            min_list = [1000000]*len(frequency_list)
             
         elif(line > 2):
             #print(line)
-            #print((interval_list[line-2]+offset) % beats, (interval_list[line-2]+offset), (beats-leniency))
-            if((interval_list[line-2]+offset) == 0.0 or
-               (interval_list[line-2]+offset) % beats <= leniency or
-               (interval_list[line-2]+offset) % beats >= (beats-leniency)): #-2 because the csv has 2 offset
+            #print(interval_list[line-3])
+            #print((interval_list[line-2]+offset) % beats,
+            #(interval_list[line-2]+offset), (beats-leniency))
 
-                #print((interval_list[line-2]+offset))
+            if((interval_list[line-3]+offset) == 0.0 or
+               (interval_list[line-3]+offset) % beats <= leniency or
+               (interval_list[line-3]+offset) % beats >= (beats-leniency)): #-2 because the csv has 2 offset
+                #print("made it")
+                
+                #print((interval_list[line-3]+offset))
+                #print()
                 within_bounds = True
-                max_list = [0]*len(time)
-                #grab the max frequency
+
+                #grab the max and min frequencies
                 for index, amp in enumerate(time):
                     #print(max_list)
                     if(float(amp) > max_list[index]):
-                        max_list[index] = amp
+                        max_list[index] = float(amp)
+                    if(float(amp) < min_list[index]):
+                        min_list[index] = float(amp)
                     
                 #print(max_list)
                         
             elif(within_bounds):
                 within_bounds = False
                 for num, freq in enumerate(max_list):
+                    #print(frequency_list[num],freq)
                     freq = float(freq)
-                    
+                    #print(prev_amplitude)
                     if(freq > prev_amplitude): #the next freq has higher amplitude
                         descent = True
-                        
-                        
+                         
                     elif(freq <= prev_amplitude and descent):
+                        #print("HI")
                         descent = False
                         if(prev_amplitude > threshold):
-                            time_list.append((frequency_list[num-1],prev_amplitude))
+                            #print(frequency_list[num-1],min_list[num],max_list[num])
+                            #print(float(min_list[num])/float(max_list[num]))
+                            #if(float(min_list[num])/float(max_list[num]) > .70 ):
+                                #if the frequency exists in the previous time and it's louder than the threshold
+                            if(len(note_list) > 0 and len(note_list[-1]) > 0):
+                                    for f in note_list[-1]:
+                                        if(f[0] == frequency_list[num-1] and prev_amplitude/f[1] < .75
+                                           and prev_amplitude/f[1] > 1.25):
+                                            add_frequency = False
+                            if(add_frequency):
+                                time_list.append((frequency_list[num-1],prev_amplitude))
 
                     prev_amplitude = freq
+                    add_frequency = True
 
                 sorted(time_list, key=lambda x: x[1])# sort by biggest amplitude in interval
                 #print(time_list)
                 note_list.append(time_list)
                 time_list = []
-                max_list = [0]*len(time_list)
 
-        #if(line == 3):   #checking first line only
+                #refresh for the next run
+                max_list = [0]*len(frequency_list)
+                min_list = [1000000]*len(frequency_list)
+
+        #if(line == 12):   #checking first line only
         #    break
     csv_file.close
 
@@ -132,9 +149,15 @@ def number_converter(list_of_freq):
 
 #Test
 #freq_list = create_note_list("440Hz.csv",120)
-freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,7000,-.08)
+#freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,8000,-0.08)
+#freq_list = create_note_list("Chopsticks.csv",120,4000,-.15,.03)
+#freq_list = create_note_list("Baa_Baa_Black_Sheep_(120BPM).csv",120,4000,-.08,.03)
+freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
 #print(len(freq_list))
-print(number_converter(freq_list))
+#print(number_converter(freq_list))
+#a = number_converter(freq_list)
+#for thing in a:
+#    print(thing)
 
 #TODO
 '''
@@ -143,4 +166,7 @@ Find a way to distinguish a long note with a short note
 Maybe compare up to 8th notes (for now at least) and compare the min and max
 Could be a % or a threshold again
 Whole notes probably won't do anything because you can't hold noteboxes
+
+Maybe make threshold a percentage so distinguish min and max
+-.08
 '''
