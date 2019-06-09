@@ -83,8 +83,9 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                     
                 #print(max_list)
                         
-            elif(within_bounds):
+            elif(within_bounds): #The time is out of bounds and we left the leniency
                 within_bounds = False
+                #print(interval_list[line-3]+offset)
                 for num, freq in enumerate(max_list):
                     #print(frequency_list[num],freq)
                     freq = float(freq)
@@ -95,16 +96,23 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                     elif(freq <= prev_amplitude and descent):
                         #print("HI")
                         descent = False
-                        if(prev_amplitude > threshold):
+                        #print(frequency_list[num], multiplier(frequency_list[num]))
+                        a=multiplier(threshold,frequency_list[num-1])
+                        #print(prev_amplitude,a,"BRO")
+                        if(prev_amplitude > a):# multiplier(threshold, frequency_list[num])):
+                            #print("YO")
+                            #print(frequency_list[num-1],multiplier(threshold,frequency_list[num-1]),a)
                             #print(frequency_list[num-1],min_list[num],max_list[num])
                             #print(float(min_list[num])/float(max_list[num]))
                             #if(float(min_list[num])/float(max_list[num]) > .70 ):
-                                #if the frequency exists in the previous time and it's louder than the threshold
+                            #if the frequency exists in the previous time and it's louder than the threshold
+                            '''
                             if(len(note_list) > 0 and len(note_list[-1]) > 0):
-                                    for f in note_list[-1]:
-                                        if(f[0] == frequency_list[num-1] and prev_amplitude/f[1] < .75
-                                           and prev_amplitude/f[1] > 1.25):
-                                            add_frequency = False
+                                for f in note_list[-1]:
+                                    if(f[0] == frequency_list[num-1] and prev_amplitude/f[1] < .75
+                                        and prev_amplitude/f[1] > 1.25):
+                                        add_frequency = False
+                                        '''
                             if(add_frequency):
                                 time_list.append((frequency_list[num-1],prev_amplitude))
 
@@ -147,6 +155,21 @@ def number_converter(list_of_freq):
 
     return new_list
 
+def multiplier(threshold, freq):
+    #Due to higher frequencies being louder, I need this to increase threshold.
+    #Currently, it's a piece wise, but I can make it logarithmic later if I have time
+    note_mult = {184.997:.5,195.998:.6,207.652:.6,220:.7,233.082:.7,246.941:.8,
+                    261.625:.8,277.182:.9,293.664:.9,311.127:1,329.627:1,
+                    349.228:1,369.994:1.6,391.995:1.5,415.304:1.4,439.999:1.8,
+                    466.163:1.8,493.883:1.9,523.25:1.9,554.365:2,587.329:2,
+                    622.253:2.1,659.254:2.1,698.455:2.2,739.988:2.2}
+    #return 1
+    if(freq in note_mult):
+        #print(threshold,freq,note_mult[freq]*threshold,"PEH")
+        #print("PEH")
+        return note_mult[freq]*threshold
+    else:
+        return 1
 #Test
 #freq_list = create_note_list("440Hz.csv",120)
 #freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,8000,-0.08)
@@ -155,9 +178,9 @@ def number_converter(list_of_freq):
 freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
 #print(len(freq_list))
 #print(number_converter(freq_list))
-#a = number_converter(freq_list)
-#for thing in a:
-#    print(thing)
+a = number_converter(freq_list)
+for num,thing in enumerate(a):
+    print(num+1,thing)
 
 #TODO
 '''
