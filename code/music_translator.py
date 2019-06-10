@@ -177,10 +177,11 @@ def multiplier(threshold, freq):
 #freq_list = create_note_list("Baa_Baa_Black_Sheep_(120BPM).csv",120,4000,-.08,.03)
 freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
 #print(len(freq_list))
-#print(number_converter(freq_list))
-a = number_converter(freq_list)
-for num,thing in enumerate(a):
-    print(num+1,thing)
+print(number_converter(freq_list))
+#Testing purposes
+#a = number_converter(freq_list)
+#for num,thing in enumerate(a):
+#    print(num+1,thing)
 
 #TODO
 '''
