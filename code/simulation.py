@@ -52,7 +52,7 @@ def buildNotePositions(pitches):
 	#Position of noteblocks is in a straight line in front of the Agent starting positon.
 	for i in range(len(pitches)):
 		positions.append((starting_x,z))
-		starting_x -= 2
+		starting_x -= 3
 
 	#Save these positions.
 	saveNotePositions(positions)
@@ -64,18 +64,51 @@ def saveNotePositions(positions):
         note_positions[i] = positions[i]
 
 
+def generateAgentTeleportPositions(positions,agent_id):
+    shift = [(0,0),(1,1),(0,2),(-1,1)]
+    tele_pos = {}
+
+    for i in range(len(positions)):
+        pos = (positions[i][0]+shift[agent_id][0], positions[i][1]+shift[agent_id][1])
+        tele_pos[i]=pos
+
+    return tele_pos
+
 #Constructs the xml string for generating each noteblock.
 def getNoteBlockDrawing(positions):
-	drawing = ""
-	index = 0
-	for p in positions:
-		drawing += '<DrawBlock x="' + str(p[0]) + '" y="227" z="' + str(p[1]) + '" type="noteblock" variant="' + pitches[index] +  '"/>'
-		index += 1
+    drawing = ""
+    index = 0
+    for p in positions:
+        drawing += '<DrawBlock x="' + str(p[0]) + '" y="227" z="' + str(p[1]) + '" type="noteblock" variant="' + pitches[index] +  '"/>'
+        index += 1
 
-	return drawing
+    return drawing
+
+def generateAgentSection(num_agents):
+    cardinal_direction = [0, 90, 180, -90]
+    drawing = ""
+    for i in range(num_agents):
+        drawing += '''<AgentSection mode="Survival">
+        <Name>Agent''' + str(i+1) + '''</Name>
+        <AgentStart> 
+            <Placement x="'''+str(0.5+i) + '''" y="227.0" z="0.5" yaw="''' + str(cardinal_direction[i]) + '''" pitch="50"/>
+        </AgentStart>
+        <AgentHandlers>
+            <ContinuousMovementCommands turnSpeedDegs="480"/>
+            <AbsoluteMovementCommands/>
+            <SimpleCraftCommands/>
+            <MissionQuitCommands/>
+            <InventoryCommands/>
+        <ObservationFromNearbyEntities>
+            <Range name="entities" xrange="40" yrange="40" zrange="40"/>
+            </ObservationFromNearbyEntities>
+        </AgentHandlers>
+        </AgentSection>\n\n'''
+
+    return drawing
 
 #Returns xml string for generating the minecraft world.
-def getMissionXML():
+def getMissionXML(num_agents):
 
 	positions = buildNotePositions(pitches)
 
@@ -105,45 +138,10 @@ def getMissionXML():
                     <DrawCuboid x1="-50" y1="226" z1="-50" x2="50" y2="226" z2="50" type="monster_egg" variant="chiseled_brick" />
                     ''' + getNoteBlockDrawing(positions) + '''
                 </DrawingDecorator>
-                <ServerQuitWhenAnyAgentFinishes />
+                <ServerQuitWhenAnyAgentFinishes/>
             </ServerHandlers>
         </ServerSection>
-
-        <AgentSection mode="Survival">
-            <Name>Agent1</Name>
-            <AgentStart>
-                <Placement x="0.5" y="227.0" z="0.5" yaw="0" pitch="50"/>
-            </AgentStart>
-            <AgentHandlers>
-                <ContinuousMovementCommands turnSpeedDegs="480"/>
-                <AbsoluteMovementCommands/>
-                <SimpleCraftCommands/>
-                <MissionQuitCommands/>
-                <InventoryCommands/>
-                <ObservationFromNearbyEntities>
-                    <Range name="entities" xrange="40" yrange="40" zrange="40"/>
-                </ObservationFromNearbyEntities>
-                <ObservationFromFullInventory/>
-            </AgentHandlers>
-        </AgentSection>
-
-        <AgentSection mode="Survival">
-            <Name>Agent2</Name>
-            <AgentStart>
-                <Placement x="1.5" y="227.0" z="1.5" yaw="0" pitch="50"/>
-            </AgentStart>
-            <AgentHandlers>
-                <ContinuousMovementCommands turnSpeedDegs="480"/>
-                <AbsoluteMovementCommands/>
-                <SimpleCraftCommands/>
-                <MissionQuitCommands/>
-                <InventoryCommands/>
-                <ObservationFromNearbyEntities>
-                    <Range name="entities" xrange="40" yrange="40" zrange="40"/>
-                </ObservationFromNearbyEntities>
-                <ObservationFromFullInventory/>
-            </AgentHandlers>
-        </AgentSection>
+    ''' + generateAgentSection(num_agents) + '''
 
     </Mission>'''
 
@@ -206,64 +204,81 @@ def waitForStart(agent_hosts):
     print("Mission has started.")
 
 def main():
+
+    #Hardcode number of agents to play song
+    num_agents = 2
+
+    #Obtain song csv and get solutions
+    #freq_list = mt.create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
+    #freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,8000,-.08)
+    freq_list = mt.create_note_list("Chopsticks.csv",120,4000,-.15,.03)
+    freq_list = mt.number_converter(freq_list)
+    solutions = cs.get_solutions(freq_list, num_agents)
+
+    #Create musician for each agent and pass teleport positions.
+    musicians=[]
+    for i in range(num_agents):
+        musicians.append(Musician(generateAgentTeleportPositions(note_positions, i)))
+
+    #Hardcode Agent Names
+    for i in range(num_agents):
+        agent_names.append("Agent" + str(i+1))
+
     '''
     MALMO
     '''
     print('Starting...', flush=True)
 
-    agent_host = MalmoPython.AgentHost()
-    agent_host2 = MalmoPython.AgentHost()
+    #Create agents.
+    agent_hosts = []
+    for i in range(num_agents):
+        agent_hosts.append(MalmoPython.AgentHost())
 
-    malmoutils.parse_command_line(agent_host)
+    malmoutils.parse_command_line(agent_hosts[0])
 
-    my_mission = MalmoPython.MissionSpec(getMissionXML(), True)
+    #Get mission and allow commands for teleport.
+    my_mission = MalmoPython.MissionSpec(getMissionXML(num_agents), True)
     my_mission.allowAllChatCommands()
 
+    #Add client for each agent needed.
     my_client_pool = MalmoPython.ClientPool()
-    my_client_pool.add(MalmoPython.ClientInfo("127.0.0.1", 10000))
-    my_client_pool.add(MalmoPython.ClientInfo("127.0.0.1", 10001))
+    for i in range(num_agents):
+        my_client_pool.add(MalmoPython.ClientInfo("127.0.0.1", 10000+i))
 
     MalmoPython.setLogging("", MalmoPython.LoggingSeverityLevel.LOG_OFF)
 
-    musician = Musician(note_positions)
-    musician2 = Musician(note_positions)
+    #Start mission for each agent
+    for i in range(num_agents):
+        startMission(agent_hosts[i], my_mission, my_client_pool, malmoutils.get_default_recording_object(agent_hosts[0], "agent_" + str(i+1) + "_viewpoint_discrete"), i, '')
 
-    startMission(agent_host, my_mission, my_client_pool, malmoutils.get_default_recording_object(agent_host, "agent_1_viewpoint_discrete"), 0, '' )
-    startMission(agent_host2, my_mission, my_client_pool, malmoutils.get_default_recording_object(agent_host, "agent_2_viewpoint_discrete"), 1, '' )
-    waitForStart([agent_host, agent_host2])
+    #Wait for all missions to begin.
+    waitForStart(agent_hosts)
 
+    #Pause for simulation to begin.
     time.sleep(1)
     
 
     '''
     SIMULATION BEGINS HERE
     '''
-    freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08)
-    freq_list = mt.number_converter(freq_list)
-    solutions = cs.get_solutions(freq_list, 2)
-
-    agent_names = ["Agent1", "Agent2"]
-
     for i in range(len(solutions[0])):
 
-        musician.teleport_to_noteblock(agent_host, solutions[0][i], agent_names[0])
-        musician2.teleport_to_noteblock(agent_host, solutions[1][i], agent_names[1])
+        #teleport each agent to the corresponding note.
+        for j in range(len(musicians)):
+            musicians[j].teleport_to_noteblock(agent_hosts[0], solutions[j][i], agent_names[j])
         time.sleep(0.1)
+        
+        #play each note.
+        for k in range(len(musicians)):
+            if musicians[k].can_play:
+                agent_hosts[k].sendCommand("attack 1")
+                
+                time.sleep(0.001)
+                agent_hosts[k].sendCommand("attack 0")
+                musicians[k].can_play = False
 
-        if musician.can_play:
-            agent_host.sendCommand("attack 1")
-            
-            time.sleep(0.001)
-            agent_host.sendCommand("attack 0")
-            musician.can_play = False
-
-        if musician2.can_play:
-            agent_host2.sendCommand("attack 1")
-            time.sleep(0.001)
-            agent_host2.sendCommand("attack 0")
-            musician2.can_play = False
-
-        time.sleep(0.3)
-    
+        #modifies the timing between each note hit.
+        time.sleep(0.1)
+        
 if __name__ == '__main__':
 	main()	
