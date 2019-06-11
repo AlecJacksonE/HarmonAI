@@ -215,12 +215,17 @@ def main():
     freq_list = mt.number_converter(freq_list)
     solutions = cs.get_solutions(freq_list, num_agents)
 
+    #Get Mission. Needed for teleport positions.
+    missionXML = getMissionXML(num_agents)
+
     #Create musician for each agent and pass teleport positions.
     musicians=[]
     for i in range(num_agents):
-        musicians.append(Musician(generateAgentTeleportPositions(note_positions, i)))
+        agent_positions = generateAgentTeleportPositions(note_positions, i)
+        musicians.append(Musician(agent_positions))
 
     #Hardcode Agent Names
+    agent_names=[]
     for i in range(num_agents):
         agent_names.append("Agent" + str(i+1))
 
@@ -237,7 +242,7 @@ def main():
     malmoutils.parse_command_line(agent_hosts[0])
 
     #Get mission and allow commands for teleport.
-    my_mission = MalmoPython.MissionSpec(getMissionXML(num_agents), True)
+    my_mission = MalmoPython.MissionSpec(missionXML, True)
     my_mission.allowAllChatCommands()
 
     #Add client for each agent needed.
