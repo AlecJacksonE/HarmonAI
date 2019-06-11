@@ -273,14 +273,17 @@ def main():
             musicians[j].teleport_to_noteblock(agent_hosts[0], solutions[j][i], agent_names[j])
         time.sleep(0.1)
         
-        #play each note.
+        # play each note.
         for k in range(len(musicians)):
             if musicians[k].can_play:
                 agent_hosts[k].sendCommand("attack 1")
-                
-                time.sleep(0.001)
+
+        time.sleep(0.001)
+
+        for k in range(len(musicians)):
+            if musicians[k].can_play:
                 agent_hosts[k].sendCommand("attack 0")
-                musicians[k].can_play = False
+            musicians[k].can_play = False
 
         #modifies the timing between each note hit.
         time.sleep(0.1)
