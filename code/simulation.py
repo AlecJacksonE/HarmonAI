@@ -207,15 +207,16 @@ def waitForStart(agent_hosts):
 def main():
 
     #Hardcode number of agents to play song
-    num_agents = 2
+    num_agents = 4
 
     #Obtain song csv and get solutions
-    #freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08) #2 Agents
+    #freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08) #1 Agent
     #freq_list = mt.create_note_list("Chopsticks.csv",120,4000,-.15,.03) #2 Agents
     freq_list = mt.create_note_list("Bad_Apple.csv",120,3000,-.08,.03) #2 Agents
-    #freq_list = mt.create_note_list("Grenade.csv",120,3000,-.08,.03) #4 Agents
+    #freq_list = mt.create_note_list("Grenade_120BPM.csv",120,1500,-.08,.03) #4 Agents
     freq_list = mt.number_converter(freq_list)
     solutions = cs.get_solutions(freq_list, num_agents)
+    print(solutions)
     #print(solutions)
 
     #Get Mission. Needed for teleport positions.

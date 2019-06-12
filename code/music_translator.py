@@ -70,6 +70,7 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                 #print("made it")
                 
                 #print((interval_list[line-3]+offset))
+                #print((interval_list[line-3]))
                 #print()
                 within_bounds = True
 
@@ -97,7 +98,7 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                         #print("HI")
                         descent = False
                         #print(frequency_list[num], multiplier(frequency_list[num]))
-                        a=multiplier(threshold,frequency_list[num-1])
+                        a=multiplier(threshold,frequency_list[num-1], file_name)
                         #print(prev_amplitude,a,"BRO")
                         if(prev_amplitude > a):# multiplier(threshold, frequency_list[num])):
                             #print("YO")
@@ -128,7 +129,7 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                 max_list = [0]*len(frequency_list)
                 min_list = [1000000]*len(frequency_list)
 
-        #if(line == 12):   #checking first line only
+        #if(line == 120):   #checking first line only
         #    break
     csv_file.close
 
@@ -155,7 +156,7 @@ def number_converter(list_of_freq):
 
     return new_list
 
-def multiplier(threshold, freq):
+def multiplier(threshold, freq, file_name):
     #Due to higher frequencies being louder, I need this to increase threshold.
     #Currently, it's a piece wise, but I can make it logarithmic later if I have time
     note_mult = {184.997:.5,195.998:.6,207.652:.6,220:.7,233.082:.7,246.941:.8,
@@ -163,6 +164,13 @@ def multiplier(threshold, freq):
                     349.228:1,369.994:1.6,391.995:1.5,415.304:1.4,439.999:1.6,
                     466.163:1.8,493.883:1.9,523.25:1.9,554.365:2,587.329:2,
                     622.253:2.1,659.254:2.1,698.455:2.2,739.988:2.2}
+
+    if file_name == "Grenade_120BPM.csv":
+        note_mult = {184.997:.5,195.998:.6,207.652:.6,220:.5,233.082:.7,246.941:.8,
+                        261.625:.8,277.182:.9,293.664:.9,311.127:1,329.627:1,
+                        349.228:1,369.994:1.6,391.995:1.5,415.304:1.4,439.999:1.6,
+                        466.163:1.8,493.883:1.9,523.25:1.9,554.365:2,587.329:1,
+                        622.253:2,659.254:2,698.455:2,739.988:2}
     #return 1
     if(freq in note_mult):
         #print(threshold,freq,note_mult[freq]*threshold,"PEH")
@@ -175,13 +183,14 @@ def multiplier(threshold, freq):
 #freq_list = create_note_list("Twinkle Twinkle Little Star.csv",120,8000,-0.08)
 #freq_list = create_note_list("Chopsticks.csv",120,4000,-.15,.03)
 #freq_list = create_note_list("Baa_Baa_Black_Sheep_(120BPM).csv",120,4000,-.08,.03)
-freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
+#freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
+freq_list = create_note_list("Grenade_120BPM.csv",120,1500,-.09,.05)
 #print(len(freq_list))
-print(number_converter(freq_list))
+#print(number_converter(freq_list))
 #Testing purposes
-#a = number_converter(freq_list)
-#for num,thing in enumerate(a):
-#    print(num+1,thing)
+a = number_converter(freq_list)
+for num,thing in enumerate(a):
+    print(num+1,thing)
 
 #TODO
 '''
