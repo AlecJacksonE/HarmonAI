@@ -17,7 +17,7 @@ After we give AnthemScore the files, we let AnthemScore's neural network decode 
 
 ![](images/CSV.PNG) 
 
-Alongside the file_name, we also need to give the function the tempo (beats per minute), the threshold (how loud the amplitude must be to register as a note), the offset (how far away the song's is from time 0 seconds), and leniency (how offbeat the song is from the tempo's beat). After running the function, the function sets up the values, and iterates through all the frames. We check if we want to consider the time interval if it falls within the boundary of tempo ± leniency. For example, if the song has a tempo of 120BPM, an offset of .05, and a leniency of .03, the checker would find and consider the time intervals between .27s and .33s because every eighth note is .25s, offsetting it would make the middle .3s, and the leniency would make it search .03s before and after.   
+Alongside the file_name, we also need to give the function the tempo (beats per minute), the threshold (how loud the amplitude must be to register as a note), the offset (how far away the song is from time 0 seconds), and leniency (how offbeat the song is from the tempo's beat). After running the function, the function sets up the values, and iterates through all the frames. We check if we want to consider the time interval if it falls within the boundary of tempo ± leniency. For example, if the song has a tempo of 120BPM, an offset of .05, and a leniency of .03, the checker would find and consider the time intervals between .27s and .33s because every eighth note is .25s, offsetting it would make the middle .3s, and the leniency would make it search .03s before and after.   
 
 If the frame's timestamp is within the tempo ± leniency, then we record the minimum and maximum amplitude for each frequency of the whole interval. Once we leave the boundary of tempo ± leniency, we use a hill-climbing search staring from the lowest frequency to see each peak amplitude.  
 
@@ -26,7 +26,13 @@ After finding the local peak amplitude (the frequencies below and after have low
 ![](images/Pass.PNG) 
 ![](images/Fail.PNG) 
 
-If the frequency passes, we then append a tuple of the frequency and its maximum amplitude to the time_list. We keep checking the interval until the end in case the interval has chords (more than one note playing at the same time). After collecting all the notes, we then sort the notes by amplitude. Once we reach the end of the song, we convert the frequencies to integers that correlate to the Minecraft noteblocks. After conversion, we append each interval into the final note_list where we output the result.  
+If the frequency passes, we then append a tuple of the frequency and its maximum amplitude to the time_list. We keep checking the interval until the end in case the interval has chords (more than one note playing at the same time). After collecting all the notes, we then sort the notes by amplitude.   
+
+Once we reach the end of the song, we convert the frequencies to integers that correlate to the Minecraft noteblocks. (see below picture. The numbers correlate the integer numbers to the frequencies)
+
+![](images/Freq_to_int.PNG)
+
+After conversion, we append each interval into the final note_list where we output the result.  
 
 Baseline Approach (Brute Force) - Alec  
 Random Assignment - Kenny  
