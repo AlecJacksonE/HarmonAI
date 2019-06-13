@@ -1,7 +1,7 @@
 ## Video goes here
 
 ## Project Summary
-For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp. Our AI not only tries to play the song as close to the audio file as possible, but the AI will also try to achieve this goal with the fewest amount of steps it can find.
+For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp. Our AI not only tries to play the song as close to the audio file as possible, but the AI will also try to achieve this goal with the fewest amount of steps it can find. We want to simulate a MIDI-like contraption, and with AI, we can play songs without knowing how to play music as efficiently as possible.
 
 ## Approach
 CSP Variables, constraints, optimization function  
@@ -43,10 +43,13 @@ The baseline approach to solving this problem is to use brute force to exhaustiv
 
 ![](images/brute_force_test.png)
 
-This method will 100% of the time find the optimal solution because it will calculate every posible configuration of notes given to each agent. It will solve the problem within a reasonable time if the amount of notes is small. The issue however is that the time to find that optimal solution scales quickly as a song contains more notes and requires more notes to be played at the consecutively. In our example our brute force solver was able to find the solution to a 4 note problem in 6 seconds. Yet in comparison for a problem such as 6 notes the brute force solver can take up to 30 minutes to solve that one. Although brute force will return the optimal solution every time, ideally it would be better if we could find that solution in a much shorter time when used for more complex music.
+This method will 100% of the time find the optimal solution because it will calculate every posible configuration of notes given to each agent. It will solve the problem within a reasonable time if the amount of notes is small. The issue however is that the time to find that optimal solution scales quickly as a song contains more notes and requires more notes to be played at the consecutively. In our example our brute force solver was able to find the solution to a 4 note problem in 5 seconds. Yet in comparison for a problem such as 6 notes the brute force solver can take up to 30 minutes to solve that one. Although brute force will return the optimal solution every time, ideally it would be better if we could find that solution in a much shorter time when used for more complex music.
 
 #### Random Assignment
 The random assignment search is another strategy that we experimented with. What random assignment does is for every iteration, two agent’s tasks are swapped and then tested to see if the amount of total steps decreased. If the total does not improve, then we swap another two until the iterations run out. Otherwise, we save the new minimum total and use that as progress to find the next step towards a lower minimum.  
+
+Potentially, this could find the minimum better than the brute force option, but as the name implies, the function is random and can even be stuck at a local minimum. At that point, the iterations would be wasted and no progress will be made.  
+
 #### Greedy Search (Most Optimal) - Rodrigo  
  
 ## Evaluation
@@ -54,8 +57,7 @@ In terms of qualitative evaluation, we would like to make a quick remark on the 
 
 <a href="https://github.com/AlecJacksonE/HarmonAI/blob/master/music/">Music</a>
 
-Optimality (3 graphs) - [No one yet]  
-Quality compare CSV files from actual song and minecraft's version) - Rodrigo  
+Optimality (3 graphs) - Rodrigo  
 Quick summary of "we solved it" - [No one yet]  
 
 ## References
