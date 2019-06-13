@@ -78,9 +78,16 @@ In terms of qualitative evaluation, we would like to make a quick remark on the 
 
 <a href="https://github.com/AlecJacksonE/HarmonAI/blob/master/music/">Music</a>
 
+We had three approaches based on optimality and speed. As can be seen below our Naive brute force method would always find the optimal solution by doing an exhaustive search to find all solutions. It outperforms both the random search algorithm as well as the Greedy search algorithm in terms of optimality. Yet brute force is not without its tradeoffs as it trades optimality with an exponential cost in speed. Brute Force search must exhaustively search for all solutions within the space including sub-optimal ones. This leads to the brute force algorithm performing exceptionally worse than the other two in terms of speed. In comparison the random search algorithm made a huge increase in speed by limiting the number of iterations occurring. The algorithm will continue swapping agents resulting in the agent finding a semi-optimal solution in a fraction of the time of the brute force algorithm. In contrast to brute force the random search algorithm sacrifices its optimality to produce faster results. Lastly, our Greedy search algorithm added heuristics in traversing the search space to increase both average quality and speed.
+
+
+Speed
+
+
 ![](images/speed.png)
 
-Optimality (3 graphs) - Rodrigo 
+
+Optimality
 
 ![](images/optimality.png)
 
