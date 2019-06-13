@@ -6,6 +6,7 @@
 
 import MalmoPython
 import malmoutils
+import os
 import sys
 import json
 import constraint_solver as cs
@@ -206,14 +207,17 @@ def waitForStart(agent_hosts):
 def main():
 
     #Hardcode number of agents to play song
-    num_agents = 2
+    num_agents = 4
 
     #Obtain song csv and get solutions
-    #freq_list = mt.create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
-    #freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,8000,-.08)
-    freq_list = mt.create_note_list("Chopsticks.csv",120,4000,-.15,.03)
+    #freq_list = mt.create_note_list("Twinkle_Twinkle_Little_Star.csv",120,7000,-.08) #1 Agent
+    #freq_list = mt.create_note_list("Chopsticks.csv",120,4000,-.15,.03) #2 Agents
+    freq_list = mt.create_note_list("Bad_Apple.csv",120,3000,-.08,.03) #2 Agents
+    #freq_list = mt.create_note_list("Grenade_120BPM.csv",120,1500,-.08,.03) #4 Agents
     freq_list = mt.number_converter(freq_list)
     solutions = cs.get_solutions(freq_list, num_agents)
+    print(solutions)
+    #print(solutions)
 
     #Get Mission. Needed for teleport positions.
     missionXML = getMissionXML(num_agents)
@@ -223,11 +227,6 @@ def main():
     for i in range(num_agents):
         agent_positions = generateAgentTeleportPositions(note_positions, i)
         musicians.append(Musician(agent_positions))
-
-    #Hardcode Agent Names
-    agent_names=[]
-    for i in range(num_agents):
-        agent_names.append("Agent" + str(i+1))
 
     '''
     MALMO
@@ -266,12 +265,12 @@ def main():
     '''
     SIMULATION BEGINS HERE
     '''
+    
     for i in range(len(solutions[0])):
 
         #teleport each agent to the corresponding note.
         for j in range(len(musicians)):
-            musicians[j].teleport_to_noteblock(agent_hosts[0], solutions[j][i], agent_names[j])
-        time.sleep(0.1)
+            musicians[j].teleport_to_noteblock(agent_hosts[j], solutions[j][i])
         
         # play each note.
         for k in range(len(musicians)):
@@ -286,7 +285,7 @@ def main():
             musicians[k].can_play = False
 
         #modifies the timing between each note hit.
-        time.sleep(0.1)
-        
+        time.sleep(0.2)
+       
 if __name__ == '__main__':
 	main()	
