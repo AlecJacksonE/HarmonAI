@@ -58,7 +58,7 @@ Once we reach the end of the song, we convert the frequencies to integers that c
 After conversion, we append each interval into the final note_list where we output the result.  
 
 ### Methods
-#### Baseline Approach (Brute Force) - Alec  
+#### Baseline Approach (Brute Force)  
 
 The baseline approach to solving this problem is to use brute force to exhaustively generate all of the solutions and attempt to find the solution that has the minimum distance score. To implement this algorithm we first preproccess our freq_list(Notes that need to be played) and construct our variables for the CSP using pyGM, each note will become a variable and can hold only one value (the note to be played). Afterwards we construct a model of factors, relationships between variables, that will be used to exhaustively search for all possible combinations of notes that can be played within the constraints of our CSP. We then use this model to search for all possible solutions to the CSP and, using a score function, will calculate the distance traversed by the agents for each solution. We can then iterate through each solution and ultimately obtain the solution with the minimum distance score. 
 
@@ -71,7 +71,7 @@ The random assignment search is another strategy that we experimented with. What
 
 Potentially, this could find the minimum better than the brute force option, but as the name implies, the function is random and can even be stuck at a local minimum. At that point, the iterations would be wasted and no progress will be made.  
 
-#### Greedy Search (Most Optimal) - Rodrigo  
+#### Greedy Search (Most Optimal) 
  
 ## Evaluation
 In terms of qualitative evaluation, we would like to make a quick remark on the quality of the sound produced by HarmonAI within minecraft. For all the songs used in the project the audio produced within minecraft sounds very close to the audio of the original song. To view this comparison, we compared our best performing music produced by our AI to the original in the video. In addition, below we have included a link to a sample video of our agent as well as an mp3 of the original song. At this point we would also like to address an issue in malmo that caused agents to play slightly off from each other. Since there is no way to synchronize sending commands to multiple agents within malmo we had to settle with sending commands to each agent consecutively. Mostly the agents play in unison, however the issue will only occur occasionally. 
