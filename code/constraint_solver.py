@@ -32,7 +32,7 @@ def create_variables(freq_list):  # pre-processing variables
 
 
 def min_constraint(x, prev):
-    diff = [abs(i - prev) for i in x]
+    diff = [abs(i - prev) if (i and prev) else 0 for i in x]
     if diff:
         return x[diff.index(min(diff))]
     return -1
@@ -66,7 +66,16 @@ def update_variables(solution, notes):
     return update
 
 
+def sort_list(freq_list):
+    note_order = []
+    for t in freq_list:  # for each t
+        note_order.append(sorted(t, key=lambda x: -x[0]))
+    return note_order
+
+
 def get_solutions(freq_list, num_agents):
+    length = len(freq_list)
+    freq_list = sort_list(freq_list)
     # create_variables: Pre-process freq list into list of variables N[t][i], where N[t] is a list of notes at time=t
     variables = create_variables(freq_list)
 
@@ -75,6 +84,11 @@ def get_solutions(freq_list, num_agents):
         # note_list: solves for one agent's optimal choice based on proximity (search based on min distance)
         solutions.append(note_list(variables))
         variables = update_variables(solutions[-1], variables)
+
+    score = score_function(solutions, length, num_agents)
+    print("Solution found with minimum distance score: ", score)
+    # print_solutions(solutions)
+
     return solutions
 
 
@@ -107,10 +121,15 @@ def convert_variable_to_list(set, length, num_agents):
 
 def score_function(notes, length, num_agents):
     # print_solutions(notes)
+    # print("Notes: ", notes)
+    if not notes:
+        return float('inf')
     total_sum = 0
     for n in range(num_agents):
         agent_sum = 0
         for t in range(length-1):
+            # print("t: ", t)
+            # print("n: ", n)
             if notes[n][t+1] and notes[n][t] and notes[n][t+1] != -1 and notes[n][t] != -1:
                 agent_sum += abs(notes[n][t+1] - notes[n][t])
         total_sum+=agent_sum
@@ -192,12 +211,12 @@ def convert_to_sample(freq_list, num_agents):
     return sample
 
 
-def get_random_swap(sample, num_agents):
+def get_random_swap(sample, num_agents, length):
     if num_agents < 2:  # Just one agent cannot swap
         return sample
 
     # random choices
-    t = random.randint(0, len(sample)-1)
+    t = random.randint(0, length-1)
     agent_options = [i for i in range(num_agents)]
     agent1 = random.choice(agent_options)
     agent_options.remove(agent1)
@@ -215,7 +234,8 @@ def get_random_swap(sample, num_agents):
     return sample
 
 
-def random_swapping(freq_list, num_agents, numIter=100, maxAttempts=10000000):
+def random_swapping(freq_list, num_agents, numIter=100, maxAttempts=1000000):
+    length=len(freq_list)
     # update list to variables
     freq_list = create_variables(freq_list)
 
@@ -229,23 +249,23 @@ def random_swapping(freq_list, num_agents, numIter=100, maxAttempts=10000000):
     iterations = 0
     attempts = 0
     min_sample = sample
-    min_sample_score = score_function(sample, len(sample), num_agents)
-    print("initial min score: ", min_sample_score)
+    min_sample_score = score_function(sample, length, num_agents)
+    print("\tinitial min score: ", min_sample_score)
     while iterations < numIter and attempts < maxAttempts:
-        sample = get_random_swap(sample, num_agents)
+        sample = get_random_swap(sample, num_agents, length)
         score = score_function(sample, len(freq_list), num_agents)
         attempts += 1
         if score < min_sample_score:
             attempts = 0
             iterations += 1
-            print("Found new min score: ", score)
+            print("\t\tFound new min score: ", score)
             min_sample = sample
             min_sample_score = score
     if attempts == maxAttempts:
-        print("reached max attempts. exited loop")
-    print("Best solution found with minimum distance score: ", min_sample_score)
-    print("Number of swaps until solution found: ", iterations)
-    print_solutions(min_sample)
+        print("\t\treached max attempts. exited loop")
+    print("\tBest solution found with minimum distance score: ", min_sample_score)
+    print("\tNumber of swaps until solution found: ", iterations)
+    # print_solutions(min_sample)
 
     return min_sample
 
@@ -253,14 +273,14 @@ def random_swapping(freq_list, num_agents, numIter=100, maxAttempts=10000000):
 def swapping_versus_search(test_freq_list, num_agents):
     print("original test_freq_list: ", test_freq_list)
 
-    print("Testing random method")
+    print("\nTesting RANDOM method")
     start = time.time()
     swap_solutions = random_swapping(test_freq_list, num_agents)
     end = time.time()
     print("total elapsed time: ", end - start)
     print_solutions(swap_solutions)
 
-    print("Testing heuristic search method")
+    print("\nTesting heuristic GREEDY search method")
     start = time.time()
     search_solutions = get_solutions(test_freq_list, num_agents)
     end = time.time()
@@ -338,17 +358,21 @@ def main():
     # print("total elapsed time: ", end - start)
     # print_solutions(solutions)
 
-
-    total_time = 3
-    num_agents = 3
-    test_freq_list = []
-    for i in range(total_time):
-        t = []
-        for a in range(num_agents):
-            t.append((random.randint(-1,24), 100))
-        test_freq_list.append(t)
-
-    swapping_versus_search(test_freq_list, num_agents)
+    # total_time = 3
+    # num_agents = 3
+    # test_freq_list = make_test_freq(total_time, num_agents)
+    # swapping_versus_search(test_freq_list, num_agents)
+    #
+    # total_time = 4
+    # num_agents = 3
+    # test_freq_list = make_test_freq(total_time, num_agents)
+    # swapping_versus_search(test_freq_list, num_agents)
+    #
+    #
+    # total_time = 4
+    # num_agents = 4
+    # test_freq_list = make_test_freq(total_time, num_agents)
+    # swapping_versus_search(test_freq_list, num_agents)
 
     # test_freq_list = [[(8, 100), (2, 100), (10, 90)], [(3, 100), (9, 100), (11, 100)], [(10, 100), (4, 100), (20, 100)], [(-1, 100), (-1, 100), (-1,100)], [(11, 100), (-1, 100), (-1, 100)]]
     # num_agents = 3
@@ -360,16 +384,6 @@ def main():
     # print("total elapsed time: ", end - start)
     # print_solutions(solutions)
 
-    test_freq_list = []
-    total_time = 4
-    num_agents = 3
-    for i in range(total_time):
-        t = []
-        for a in range(num_agents):
-            t.append((random.randint(-1, 24), 100))
-        test_freq_list.append(t)
-
-    swapping_versus_search(test_freq_list, num_agents)
     # test_freq_list = [[(8, 100), (2, 100), (10, 90)], [(3, 100), (9, 100), (11, 100)], [(10, 100), (4, 100), (20, 100)], [(-1, 100), (-1, 100), (-1,100)], [(11, 100), (-1, 100), (-1, 100)]]
     # num_agents = 3
     # print("test_freq_list: ", test_freq_list)
@@ -380,7 +394,12 @@ def main():
     # print("total elapsed time: ", end - start)
     # print_solutions(solutions)
 
-
+    for total_time in [3, 4, 5, 10]:
+        for num_agents in [2, 4]:
+            print("--------------------------------")
+            print("Total time: {} \t and \t Number of Agents: {}".format(total_time, num_agents))
+            test_freq_list = make_test_freq(total_time, num_agents)
+            swapping_versus_search(test_freq_list, num_agents)
 
 if __name__ == '__main__':
     main()
