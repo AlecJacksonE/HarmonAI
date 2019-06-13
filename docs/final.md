@@ -39,7 +39,10 @@ Random Assignment - Kenny
 Greedy Search (Most Optimal) - Rodrigo  
  
 ## Evaluation
-Quick qualitive remark about the sound - Alec  
+Quick qualitive remark about the sound - Alec
+
+In terms of qualitative evaluation, we would like to make a quick remark on the quality of the sound produced by HarmonAI within minecraft. For all the songs used in the project the audio produced within minecraft sounds very close to the audio of the original song. To view this comparison, we compared our best performing music produced by our AI to the original in the video. In addition, below we have included a link to a sample video of our agent as well as an mp3 of the original song. At this point we would also like to address an issue in malmo that caused agents to play slightly off from each other. Since there is no way to synchronize sending commands to multiple agents within malmo we had to settle with sending commands to each agent consecutively. Mostly the agents play in unison, however the issue will only occur occasionally. 
+
 Optimality (3 graphs) - [No one yet]  
 Quality compare CSV files from actual song and minecraft's version) - Rodrigo  
 Quick summary of "we solved it" - [No one yet]  
