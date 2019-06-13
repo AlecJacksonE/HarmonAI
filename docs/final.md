@@ -39,6 +39,12 @@ After conversion, we append each interval into the final note_list where we outp
 ### Methods
 #### Baseline Approach (Brute Force) - Alec  
 
+The baseline approach to solving this problem is to use brute force to exhaustively generate all of the solutions and attempt to find the solution that has the minimum distance score. To implement this algorithm we first preproccess our freq_list(Notes that need to be played) and construct our variables for the CSP using pyGM, each note will become a variable and can hold only one value (the note to be played). Afterwards we construct a model of factors, relationships between variables, that will be used to exhaustively search for all possible combinations of notes that can be played within the constraints of our CSP. We then use this model to search for all possible solutions to the CSP and, using a score function, will calculate the distance traversed by the agents for each solution. We can then iterate through each solution and ultimately obtain the solution with the minimum distance score. 
+
+![images/brute_force_test.png]
+
+This method will 100% of the time find the optimal solution because it will calculate every posible configuration of notes given to each agent. It will solve the problem within a reasonable time if the amount of notes is small. The issue however is that the time to find that optimal solution scales quickly as a song contains more notes and requires more notes to be played at the consecutively. In our example our brute force solver was able to find the solution to a 4 note problem in 5 seconds. Yet in comparison for a problem such as 6 notes the brute force solver can take up to 30 minutes to solve that one. Although brute force will return the optimal solution every time, ideally it would be better if we could find that solution in a much shorter time when used for more complex music.
+
 #### Random Assignment
 The random assignment search is another strategy that we experimented with. What random assignment does is for every iteration, two agent’s tasks are swapped and then tested to see if the amount of total steps decreased. If the total does not improve, then we swap another two until the iterations run out. Otherwise, we save the new minimum total and use that as progress to find the next step towards a lower minimum.  
 #### Greedy Search (Most Optimal) - Rodrigo  
