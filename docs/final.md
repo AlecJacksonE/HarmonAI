@@ -95,4 +95,4 @@ Optimality
 ![](images/optimality.png)
 
 ## References
-We used AnthemScore, a neural network, to translate audio files into csv files. We also used MuseScore 3 to create music and then export as an audio file for AnthemScore. We used modified Musescore (.mscz) files from user denito (Grenade Bruno Mars) and kenokill (Bad Apple!!). Utilized functions from two_diggers.py to aid in generating multiple agents.
+We used AnthemScore, a neural network, to translate audio files into csv files. We also used MuseScore 3 to create music and then export as an audio file for AnthemScore. We used modified Musescore (.mscz) files from user denito (Grenade Bruno Mars) and kenokill (Bad Apple!!). Utilized functions from two_diggers.py to aid in generating multiple agents. Alexander Ihler's pyGM helped create create gm.Var() to represent the 25 notes and create gm.Factors() between notes
