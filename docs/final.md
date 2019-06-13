@@ -4,7 +4,9 @@
 For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp. Our AI not only tries to play the song as close to the audio file as possible, but the AI will also try to achieve this goal with the fewest amount of steps it can find. We want to simulate a MIDI-like contraption, and with AI, we can play songs without knowing how to play music as efficiently as possible.
 
 ## Approach
-CSP Variables, constraints, optimization function  
+CSP Variables, constraints, optimization function
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i\,&space;\right&space;]\right&space;|" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i\,&space;\right&space;]\right&space;|" title="\forall{i} \, min\sum_{t=1}^{T}\left | N\left [ t - 1 \right ]\left [ i \right ] - N \left [ t\right ] \left [ i\, \right ]\right |" /></a>
 
 ### Preprossessing 
 First, we create audio files to feed AnthemScore and output .csv files. We used MuseScore 3 to make music and then export it as audio files, either MP3 or .wav.
@@ -57,7 +59,12 @@ In terms of qualitative evaluation, we would like to make a quick remark on the 
 
 <a href="https://github.com/AlecJacksonE/HarmonAI/blob/master/music/">Music</a>
 
-Optimality (3 graphs) - Rodrigo  
+![](images/speed.png)
+
+Optimality (3 graphs) - Rodrigo 
+
+![](images/optimality.png)
+
 Quick summary of "we solved it" - [No one yet]  
 
 ## References
