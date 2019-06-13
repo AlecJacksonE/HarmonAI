@@ -5,8 +5,21 @@ For our project, we created an orchestra of AI agents that are capable of listen
 
 ## Approach
 CSP Variables, constraints, optimization function
+With our note frequencies from AnthemScore, we can then frame our problem as a constriant satisfaction problem.
+
+First we pre-process the outpint into a matrix F[t][i] given an amplitude threshold.
+
+Then, our variables would consist of a copy of the processed frequency list into a new matrix called N, where the variable N[t][i] is played by the ith agent at time t.
+
+Each variable's domain depends on the list of notes in F[t] for every given t
+
+Finally, there are two constraints needed. First we must minimize the distance between notes played by each single agent for every adjacent pair of notes with respect to time. 
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i\,&space;\right&space;]\right&space;|" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i\,&space;\right&space;]\right&space;|" title="\forall{i} \, min\sum_{t=1}^{T}\left | N\left [ t - 1 \right ]\left [ i \right ] - N \left [ t\right ] \left [ i\, \right ]\right |" /></a>
+
+Second we must make sure each agent plays a different note, so each note variable in a given time t cannot have the same value.
+[input markup on two notes in same time t should not have the same value]
+Our naive solution is to brute force the entire domain space for solutions to our constraint, but by the large nature of this domain space this would not be optimal within regular time constraints. Next, we tried to randomly search through the domain space for improvement to our optimization function with a limited number of iterations to reach closer results in a shorter amount of time. Finally, our best solution  is a greedy search algorithm that currently searches for optimal choices per agent while removing previous agent's decisions from domain list until the frequency matrix is empty.
 
 ### Preprossessing 
 First, we create audio files to feed AnthemScore and output .csv files. We used MuseScore 3 to make music and then export it as audio files, either MP3 or .wav.
