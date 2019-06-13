@@ -6,7 +6,7 @@
 For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp. Our AI not only tries to play the song as close to the audio file as possible, but the AI will also try to achieve this goal with the fewest amount of steps it can find. We want to simulate a MIDI-like contraption, and with AI, we can play songs without knowing how to play music as efficiently as possible.
 
 ## Approach
-CSP Variables, constraints, optimization function
+
 With our note frequencies from AnthemScore, we can then frame our problem as a constriant satisfaction problem.
 
 First we pre-process the outpint into a matrix F[t][i] given an amplitude threshold.
