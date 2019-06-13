@@ -18,7 +18,11 @@ Finally, there are two constraints needed. First we must minimize the distance b
 <a href="https://www.codecogs.com/eqnedit.php?latex=\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i&space;\right&space;]\right&space;|" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\forall{i}&space;\,&space;min\sum_{t=1}^{T}\left&space;|&space;N\left&space;[&space;t&space;-&space;1&space;\right&space;]\left&space;[&space;i&space;\right&space;]&space;-&space;N&space;\left&space;[&space;t\right&space;]&space;\left&space;[&space;i&space;\right&space;]\right&space;|" title="\forall{i} \, min\sum_{t=1}^{T}\left | N\left [ t - 1 \right ]\left [ i \right ] - N \left [ t\right ] \left [ i \right ]\right |" /></a>
 
 Second we must make sure each agent plays a different note, so each note variable in a given time t cannot have the same value.
-[input markup on two notes in same time t should not have the same value]
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\forall&space;n,m&space;\:&space;N[t][n]&space;\neq&space;N[t][m]&space;\:&space;\:&space;\:&space;s.t.&space;\:&space;\:&space;n&space;\neq&space;m\:&space;and&space;\:&space;n,m&space;\:&space;\epsilon&space;\:&space;I" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\forall&space;n,m&space;\:&space;N[t][n]&space;\neq&space;N[t][m]&space;\:&space;\:&space;\:&space;s.t.&space;\:&space;\:&space;n&space;\neq&space;m\:&space;and&space;\:&space;n,m&space;\:&space;\epsilon&space;\:&space;I" title="\forall n,m \: N[t][n] \neq N[t][m] \: \: \: s.t. \: \: n \neq m\: and \: n,m \: \epsilon \: I" /></a>
+
+where I is the set of all agents
+
 Our naive solution is to brute force the entire domain space for solutions to our constraint, but by the large nature of this domain space this would not be optimal within regular time constraints. Next, we tried to randomly search through the domain space for improvement to our optimization function with a limited number of iterations to reach closer results in a shorter amount of time. Finally, our best solution  is a greedy search algorithm that currently searches for optimal choices per agent while removing previous agent's decisions from domain list until the frequency matrix is empty.
 
 ### Preprossessing 
