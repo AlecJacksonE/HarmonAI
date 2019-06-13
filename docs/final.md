@@ -6,7 +6,7 @@
 ## Approach
 CSP Variables, constraints, optimization function  
 
-Preprossessing (how we started with using AnthemScore) -Kenny  
+### Preprossessing 
 First, we create audio files to feed AnthemScore and output .csv files. We used MuseScore 3 to make music and then export it as audio files, either MP3 or .wav.
 
 ![](images/MuseScore.PNG)  
@@ -36,8 +36,10 @@ Once we reach the end of the song, we convert the frequencies to integers that c
 
 After conversion, we append each interval into the final note_list where we output the result.  
 
+### Methods
 Baseline Approach (Brute Force) - Alec  
-Random Assignment - Kenny  
+#### Random Assignment
+The random assignment search is another strategy that we experimented with. What random assignment does is for every iteration, two agent’s tasks are swapped and then tested to see if the amount of total steps decreased. If the total does not improve, then we swap another two until the iterations run out. Otherwise, we save the new minimum total and use that as progress to find the next step towards a lower minimum.
 Greedy Search (Most Optimal) - Rodrigo  
  
 ## Evaluation
