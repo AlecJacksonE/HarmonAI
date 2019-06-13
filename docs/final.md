@@ -1,7 +1,7 @@
 ## Video goes here
 
 ## Project Summary
-2 short sentences each on what we all did 
+For our project, we created an orchestra of AI agents that are capable of listening to music and recreate a song in Minecraft by scheduling each other to hit the appropriate Minecraft noteblocks on time. Our inputs is an audio file (such as .wav or .mp3). The outputs will be the sounds from the noteblocks the AI touches and also a log that tells what the AI hit with the timestamp. Our AI not only tries to play the song as close to the audio file as possible, but the AI will also try to achieve this goal with the fewest amount of steps it can find.
 
 ## Approach
 CSP Variables, constraints, optimization function  
@@ -37,14 +37,13 @@ Once we reach the end of the song, we convert the frequencies to integers that c
 After conversion, we append each interval into the final note_list where we output the result.  
 
 ### Methods
-Baseline Approach (Brute Force) - Alec  
+#### Baseline Approach (Brute Force) - Alec  
+
 #### Random Assignment
-The random assignment search is another strategy that we experimented with. What random assignment does is for every iteration, two agent’s tasks are swapped and then tested to see if the amount of total steps decreased. If the total does not improve, then we swap another two until the iterations run out. Otherwise, we save the new minimum total and use that as progress to find the next step towards a lower minimum.
-Greedy Search (Most Optimal) - Rodrigo  
+The random assignment search is another strategy that we experimented with. What random assignment does is for every iteration, two agent’s tasks are swapped and then tested to see if the amount of total steps decreased. If the total does not improve, then we swap another two until the iterations run out. Otherwise, we save the new minimum total and use that as progress to find the next step towards a lower minimum.  
+#### Greedy Search (Most Optimal) - Rodrigo  
  
 ## Evaluation
-Quick qualitive remark about the sound - Alec
-
 In terms of qualitative evaluation, we would like to make a quick remark on the quality of the sound produced by HarmonAI within minecraft. For all the songs used in the project the audio produced within minecraft sounds very close to the audio of the original song. To view this comparison, we compared our best performing music produced by our AI to the original in the video. In addition, below we have included a link to a sample video of our agent as well as an mp3 of the original song. At this point we would also like to address an issue in malmo that caused agents to play slightly off from each other. Since there is no way to synchronize sending commands to multiple agents within malmo we had to settle with sending commands to each agent consecutively. Mostly the agents play in unison, however the issue will only occur occasionally. 
 
 Optimality (3 graphs) - [No one yet]  
