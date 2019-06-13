@@ -1,4 +1,4 @@
-## Video goes here
+## Video 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/oyzKZqDtVf0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
@@ -94,7 +94,5 @@ Optimality
 
 ![](images/optimality.png)
 
-Quick summary of "we solved it" - [No one yet]  
-
 ## References
-We used AnthemScore to translate audio files into csv files. We also used MuseScore 3 to create music and then export as an audio file for AnthemScore. We used modified Musescore (.mscz) files from user denito (Grenade Bruno Mars) and kenokill (Bad Apple!!).
+We used AnthemScore, a neural network, to translate audio files into csv files. We also used MuseScore 3 to create music and then export as an audio file for AnthemScore. We used modified Musescore (.mscz) files from user denito (Grenade Bruno Mars) and kenokill (Bad Apple!!). Utilized functions from two_diggers.py to aid in generating multiple agents.
