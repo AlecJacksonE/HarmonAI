@@ -59,19 +59,10 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
             min_list = [1000000]*len(frequency_list)
             
         elif(line > 2):
-            #print(line)
-            #print(interval_list[line-3])
-            #print((interval_list[line-2]+offset) % beats,
-            #(interval_list[line-2]+offset), (beats-leniency))
-
             if((interval_list[line-3]+offset) == 0.0 or
                (interval_list[line-3]+offset) % beats <= leniency or
                (interval_list[line-3]+offset) % beats >= (beats-leniency)): #-2 because the csv has 2 offset
-                #print("made it")
                 
-                #print((interval_list[line-3]+offset))
-                #print((interval_list[line-3]))
-                #print()
                 within_bounds = True
 
                 #grab the max and min frequencies
@@ -81,39 +72,20 @@ def create_note_list(file_name,tempo,threshold=10000,offset = 0.00,leniency = .0
                         max_list[index] = float(amp)
                     if(float(amp) < min_list[index]):
                         min_list[index] = float(amp)
-                    
-                #print(max_list)
-                        
+                                           
             elif(within_bounds): #The time is out of bounds and we left the leniency
                 within_bounds = False
                 #print(interval_list[line-3]+offset)
                 for num, freq in enumerate(max_list):
-                    #print(frequency_list[num],freq)
                     freq = float(freq)
-                    #print(prev_amplitude)
                     if(freq > prev_amplitude): #the next freq has higher amplitude
                         descent = True
                          
                     elif(freq <= prev_amplitude and descent):
-                        #print("HI")
                         descent = False
-                        #print(frequency_list[num], multiplier(frequency_list[num]))
                         a=multiplier(threshold,frequency_list[num-1], file_name)
-                        #print(prev_amplitude,a,"BRO")
                         if(prev_amplitude > a):# multiplier(threshold, frequency_list[num])):
-                            #print("YO")
-                            #print(frequency_list[num-1],multiplier(threshold,frequency_list[num-1]),a)
-                            #print(frequency_list[num-1],min_list[num],max_list[num])
-                            #print(float(min_list[num])/float(max_list[num]))
-                            #if(float(min_list[num])/float(max_list[num]) > .70 ):
-                            #if the frequency exists in the previous time and it's louder than the threshold
-                            '''
-                            if(len(note_list) > 0 and len(note_list[-1]) > 0):
-                                for f in note_list[-1]:
-                                    if(f[0] == frequency_list[num-1] and prev_amplitude/f[1] < .75
-                                        and prev_amplitude/f[1] > 1.25):
-                                        add_frequency = False
-                                        '''
+
                             if(add_frequency):
                                 time_list.append((frequency_list[num-1],prev_amplitude))
 
@@ -184,22 +156,11 @@ def multiplier(threshold, freq, file_name):
 #freq_list = create_note_list("Chopsticks.csv",120,4000,-.15,.03)
 #freq_list = create_note_list("Baa_Baa_Black_Sheep_(120BPM).csv",120,4000,-.08,.03)
 #freq_list = create_note_list("Bad_Apple.csv",120,3000,-.08,.03)
-freq_list = create_note_list("Grenade_120BPM.csv",120,1500,-.09,.05)
+#freq_list = create_note_list("Grenade_120BPM.csv",120,1500,-.09,.05)
 #print(len(freq_list))
 #print(number_converter(freq_list))
 #Testing purposes
-a = number_converter(freq_list)
-for num,thing in enumerate(a):
-    print(num+1,thing)
+#a = number_converter(freq_list)
+#for num,thing in enumerate(a):
+#    print(num+1,thing)
 
-#TODO
-'''
-Find a way to distinguish a long note with a short note
-
-Maybe compare up to 8th notes (for now at least) and compare the min and max
-Could be a % or a threshold again
-Whole notes probably won't do anything because you can't hold noteboxes
-
-Maybe make threshold a percentage so distinguish min and max
--.08
-'''
